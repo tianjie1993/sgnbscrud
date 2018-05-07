@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgnbs.ms.dao.ListDAO">
+	<select id="findSysMenuList" resultType="java.util.Map">
+		select a.id, a.name, a.url, 
+		a.parentid, a.sort, a.icon,
+		a.isshow as 'E-sys_menu-isshow',a.fixedprams,b.name as parentname
+		 from sys_menu a 
+		left join sys_menu b on a.parentid=b.id 
+		<where>
+			a.id!=1
+			<if test="name!=null and name!=''">
+				and a.name like concat('%',#{name},'%')
+			</if>
+		</where>
+	</select>
+	<select id="findFieldcheckList" resultType="java.util.Map">
+		select * from fieldcheck 
+		<where>
+			<if test="tablename!=null and tablename!=''">
+				tablename like concat('%',#{tablename},'%')
+			</if>
+		</where>
+	</select>
+	<select id="findSysActionList" resultType="java.util.Map">
+		select id, url, canbatch as 'E-sys_action-canbatch', 
+		btnclass, name, menu_id, sort, type as 'E-sys_action-type',
+		 isshow as 'E-sys_action-isshow', winxy, permission, 
+    	needid as 'E-sys_action-needid',menuname  from sys_action
+		<where>
+			<if test="menuname!=null and menuname!=''">
+				and menuname like concat('%',#{menuname},'%')
+			</if>
+			<if test="name!=null and name!=''">
+				and name like concat('%',#{name},'%')
+			</if>
+		</where>
+		 order by sort desc 
+	</select>
+	
+	<select id="findSysSelectkyList" resultType="java.util.Map">
+		select *from sys_selectky
+		<where>
+		<if test="remark!=null and remark!=''">
+			remark like concat('%',#{remark},'%')
+		</if>
+		</where>
+		 order by id desc
+		
+	</select>
+	<select id="findSysUserList" resultType="java.util.Map">
+		select     id, name, login, password,
+		 createtime as 'T-time-createtime', role_ids as 'T-userrole-role_ids', status
+			 from sys_user
+			 <where>
+			 	<if test="name!=null and name!=''">
+			 		name like concat('%',#{name},'%')
+			 	</if>
+			 </where>
+	</select>
+	
+	<select id="findSysRoleList" resultType="java.util.Map">
+		select     id, name, menu_ids as 'T-menusname-menus', createtime as 'T-time-createtime', roledesc, action_ids
+		 from sys_role 
+		 <where>
+		 	<if test="name!=null and name!=''">
+		 		and name like concat('%',#{name},'%')
+		 	</if>
+		 </where>
+	</select>
+	
+	<select id="findSysLogList" resultType="java.util.Map">
+		select  b.name,a.user_id, a.actiondesc, a.actiontime as 'T-time-actiontime'
+		 from sys_log a
+		 left join sys_user b on a.user_id = b.id
+		 <where>
+		 	<if test="name!=null and name!=''">
+		 		and name like concat('%',#{name},'%')
+		 	</if>
+		 </where>
+	</select>
+	
+	
+</mapper>

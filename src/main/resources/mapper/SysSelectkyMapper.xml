@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgnbs.ms.dao.SysSelectkyDAO">
+  <resultMap id="BaseResultMap" type="com.sgnbs.ms.model.SysSelectky">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="qsql" jdbcType="VARCHAR" property="qsql" />
+    <result column="fields" jdbcType="VARCHAR" property="fields" />
+    <result column="fieldnames" jdbcType="VARCHAR" property="fieldnames" />
+    <result column="keyto" jdbcType="VARCHAR" property="keyto" />
+    <result column="valueto" jdbcType="VARCHAR" property="valueto" />
+    <result column="searchinfo" jdbcType="VARCHAR" property="searchinfo" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, qsql, fields, fieldnames, keyto, valueto, searchinfo, remark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_selectky
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_selectky
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sgnbs.ms.model.SysSelectky">
+    insert into sys_selectky (id, qsql, fields, 
+      fieldnames, keyto, valueto, 
+      searchinfo, remark)
+    values (#{id,jdbcType=INTEGER}, #{qsql,jdbcType=VARCHAR}, #{fields,jdbcType=VARCHAR}, 
+      #{fieldnames,jdbcType=VARCHAR}, #{keyto,jdbcType=VARCHAR}, #{valueto,jdbcType=VARCHAR}, 
+      #{searchinfo,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sgnbs.ms.model.SysSelectky">
+    insert into sys_selectky
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="qsql != null">
+        qsql,
+      </if>
+      <if test="fields != null">
+        fields,
+      </if>
+      <if test="fieldnames != null">
+        fieldnames,
+      </if>
+      <if test="keyto != null">
+        keyto,
+      </if>
+      <if test="valueto != null">
+        valueto,
+      </if>
+      <if test="searchinfo != null">
+        searchinfo,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="qsql != null">
+        #{qsql,jdbcType=VARCHAR},
+      </if>
+      <if test="fields != null">
+        #{fields,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldnames != null">
+        #{fieldnames,jdbcType=VARCHAR},
+      </if>
+      <if test="keyto != null">
+        #{keyto,jdbcType=VARCHAR},
+      </if>
+      <if test="valueto != null">
+        #{valueto,jdbcType=VARCHAR},
+      </if>
+      <if test="searchinfo != null">
+        #{searchinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sgnbs.ms.model.SysSelectky">
+    update sys_selectky
+    <set>
+      <if test="qsql != null">
+        qsql = #{qsql,jdbcType=VARCHAR},
+      </if>
+      <if test="fields != null">
+        fields = #{fields,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldnames != null">
+        fieldnames = #{fieldnames,jdbcType=VARCHAR},
+      </if>
+      <if test="keyto != null">
+        keyto = #{keyto,jdbcType=VARCHAR},
+      </if>
+      <if test="valueto != null">
+        valueto = #{valueto,jdbcType=VARCHAR},
+      </if>
+      <if test="searchinfo != null">
+        searchinfo = #{searchinfo,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sgnbs.ms.model.SysSelectky">
+    update sys_selectky
+    set qsql = #{qsql,jdbcType=VARCHAR},
+      fields = #{fields,jdbcType=VARCHAR},
+      fieldnames = #{fieldnames,jdbcType=VARCHAR},
+      keyto = #{keyto,jdbcType=VARCHAR},
+      valueto = #{valueto,jdbcType=VARCHAR},
+      searchinfo = #{searchinfo,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

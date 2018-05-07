@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgnbs.ms.dao.SysRoleDAO">
+  <resultMap id="BaseResultMap" type="com.sgnbs.ms.model.SysRole">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="menu_ids" jdbcType="VARCHAR" property="menuIds" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="roledesc" jdbcType="VARCHAR" property="roledesc" />
+    <result column="action_ids" jdbcType="VARCHAR" property="actionIds" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, menu_ids, createtime, roledesc, action_ids
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_role
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.sgnbs.ms.model.SysRole">
+    insert into sys_role (id, name, menu_ids, 
+      createtime, roledesc, action_ids
+      )
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{menuIds,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{roledesc,jdbcType=VARCHAR}, #{actionIds,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sgnbs.ms.model.SysRole">
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="menuIds != null">
+        menu_ids,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="roledesc != null">
+        roledesc,
+      </if>
+      <if test="actionIds != null">
+        action_ids,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="menuIds != null">
+        #{menuIds,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roledesc != null">
+        #{roledesc,jdbcType=VARCHAR},
+      </if>
+      <if test="actionIds != null">
+        #{actionIds,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sgnbs.ms.model.SysRole">
+    update sys_role
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="menuIds != null">
+        menu_ids = #{menuIds,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="roledesc != null">
+        roledesc = #{roledesc,jdbcType=VARCHAR},
+      </if>
+      <if test="actionIds != null">
+        action_ids = #{actionIds,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sgnbs.ms.model.SysRole">
+    update sys_role
+    set name = #{name,jdbcType=VARCHAR},
+      menu_ids = #{menuIds,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      roledesc = #{roledesc,jdbcType=VARCHAR},
+      action_ids = #{actionIds,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findByIds" resultMap="BaseResultMap" parameterType="java.util.List">
+          select * from sys_role where id in
+          <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+          select * from sys_role 
+  </select>
+</mapper>

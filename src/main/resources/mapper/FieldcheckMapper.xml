@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgnbs.ms.dao.FieldcheckDAO">
+  <resultMap id="BaseResultMap" type="com.sgnbs.ms.model.Fieldcheck">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="tablename" jdbcType="VARCHAR" property="tablename" />
+    <result column="fieldname" jdbcType="VARCHAR" property="fieldname" />
+    <result column="eums" jdbcType="VARCHAR" property="eums" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, tablename, fieldname, eums
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from fieldcheck
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from fieldcheck
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sgnbs.ms.model.Fieldcheck">
+    insert into fieldcheck (id, tablename, fieldname, 
+      eums)
+    values (#{id,jdbcType=INTEGER}, #{tablename,jdbcType=VARCHAR}, #{fieldname,jdbcType=VARCHAR}, 
+      #{eums,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.sgnbs.ms.model.Fieldcheck">
+    insert into fieldcheck
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="tablename != null">
+        tablename,
+      </if>
+      <if test="fieldname != null">
+        fieldname,
+      </if>
+      <if test="eums != null">
+        eums,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="tablename != null">
+        #{tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldname != null">
+        #{fieldname,jdbcType=VARCHAR},
+      </if>
+      <if test="eums != null">
+        #{eums,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sgnbs.ms.model.Fieldcheck">
+    update fieldcheck
+    <set>
+      <if test="tablename != null">
+        tablename = #{tablename,jdbcType=VARCHAR},
+      </if>
+      <if test="fieldname != null">
+        fieldname = #{fieldname,jdbcType=VARCHAR},
+      </if>
+      <if test="eums != null">
+        eums = #{eums,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sgnbs.ms.model.Fieldcheck">
+    update fieldcheck
+    set tablename = #{tablename,jdbcType=VARCHAR},
+      fieldname = #{fieldname,jdbcType=VARCHAR},
+      eums = #{eums,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findAll" resultMap="BaseResultMap">
+  	select * from fieldcheck
+  </select>
+</mapper>

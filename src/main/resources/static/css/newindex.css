@@ -1,0 +1,255 @@
+.header {
+  position: absolute;
+  height: 140px;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: url(../imgs/newIndexImg/topheadbg.jpg) repeat-x top center #0087e2;
+}
+.header .logo {
+  width: 400px;
+  height: 70px;
+  margin-top: 10px;
+  background: url(../imgs/newIndexImg/logo.png) no-repeat left center;
+  background-size: auto 100%;
+  margin-left: 30px;
+  padding: 0;
+  overflow: hidden;
+}
+.header .navleft,
+.header .navright {
+  position: absolute;
+  bottom: 0;
+  padding-left: 50px;
+}
+.header .navleft li,
+.header .navright li {
+  float: left;
+  margin-left: 10px;
+}
+.header .layui-nav-bar {
+  display: none;
+}
+.header .layui-nav {
+  background-color: transparent;
+}
+.header .layui-nav .layui-nav-item {
+  position: initial;
+  line-height: 40px;
+}
+.header .layui-nav .layui-this:after {
+  display: none;
+}
+.header .navleft {
+  left: 0;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+}
+.header .navleft li {
+  box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.2);
+  background-image: linear-gradient(to bottom, #236281, #2077b1);
+  border-radius: 4px 4px 0 0;
+}
+.header .navleft li:hover {
+  background: #eee;
+}
+.header .navleft li:hover a {
+  color: #2077b1;
+}
+.header .navleft li.layui-this {
+  background: #fff;
+}
+.header .navleft li.layui-this a {
+  color: #2077b1;
+}
+.header .navleft li > a {
+  color: #fff;
+  display: block;
+  position: relative;
+  padding: 0 22px 0 52px;
+  font-size: 16px;
+  transition: 0.3s all;
+}
+.header .navleft li > a span {
+  width: 30px;
+  height: 40px;
+  position: absolute;
+  left: 18px;
+  top: 0;
+  text-align: center;
+  transition: none;
+  border: none;
+  content: '';
+  font-size: 20px;
+  font-weight: normal;
+}
+.header .navleft li dl {
+  position: fixed;
+  left: 0;
+  padding: 0;
+  top: 140px;
+  width: 100%;
+  box-sizing: border-box;
+  height: 41px;
+  line-height: 46px;
+  overflow: hidden;
+  background: #ebebeb;
+  padding-left: 40px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-bottom: 1px solid #d2d2d2;
+  display: none;
+  transition: none;
+}
+.header .navleft li dl dd {
+  float: left;
+  margin: 0;
+  margin-left: 10px;
+}
+.header .navleft li dl dd.layui-this {
+  background: transparent;
+}
+.header .navleft li dl dd.layui-this a {
+  color: #960001;
+}
+.header .navleft li dl dd a {
+  padding: 0 20px;
+  width: 100%;
+  color: #276f97;
+  box-sizing: border-box;
+  background: transparent !important;
+}
+.header .navleft li dl dd a:hover {
+  opacity: 0.8;
+}
+.header .navleft li:hover dl {
+  display: block;
+}
+.header .navright {
+  right: 0;
+  height: 140px;
+  line-height: 140px;
+}
+.header .navright li {
+  position: relative;
+}
+.header .navright li > span {
+  height: 100%;
+  display: block;
+  padding: 0 16px;
+  color: #fff;
+}
+.header .navright li > a {
+  height: 100%;
+  display: block;
+  padding: 0 16px;
+  position: relative;
+  color: #fff;
+  transition: 0.3s all;
+}
+.header .navright li > a:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+.header .navright li > a:active {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.header .navright li .msg {
+  position: relative;
+}
+.header .navright li .msg span {
+  height: 18px;
+  line-height: 18px;
+  position: relative;
+  right: 10px;
+  top: -10px;
+  padding: 0 6px;
+  font-size: 12px;
+  text-align: center;
+  background-color: #FF5722;
+  color: #fff;
+  border-radius: 4px;
+}
+.header .navright li .quit {
+  padding-left: 45px;
+  background: url(../imgs/newIndexImg/quit.png) no-repeat;
+  background-size: 24px auto;
+  background-position: 16px center;
+}
+.header .navright li .menu {
+  padding-right: 30px;
+  background: url(../imgs/newIndexImg/xjt.png) no-repeat;
+  background-size: 20px auto;
+  background-position: calc(100% - 10px) center;
+}
+.header .navright li .menu:hover, .header .navright li .menu:active {
+  background-color: transparent;
+}
+.header .navright li .menu + dl {
+  width: 100%;
+  display: none;
+  position: absolute;
+  top: 90px;
+  left: 0;
+  padding: 5px 0;
+  text-align: center;
+  z-index: 10;
+  background: #fff;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+}
+.header .navright li .menu + dl dd {
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+}
+.header .navright li .menu + dl dd a {
+  height: 100%;
+  line-height: 2em;
+  color: #000;
+}
+.header .navright li .menu + dl dd a:hover {
+  color: #004CA2;
+}
+
+.newbody {
+  position: absolute;
+  top: 140px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+.newbody .layui-tab-content {
+  box-sizing: border-box;
+  height: calc(100% - 41px);
+  padding: 0;
+  overflow: hidden;
+}
+.newbody .layui-tab {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.newbody .layui-tab .layui-tab-title {
+  display: none;
+  background: url(../imgs/newIndexImg/titbg.jpg) repeat-x top center #fff;
+}
+.newbody .layui-tab .layui-tab-title .layui-this {
+  background-color: #fff;
+}
+.newbody .layui-tab .layui-tab-title li:first-child i {
+  display: none;
+}
+.newbody .layui-tab-item {
+  width: 100%;
+  height: 100%;
+  overflow: hidden !important;
+}
+.newbody .layui-tab-item iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/*# sourceMappingURL=newindex.css.map */

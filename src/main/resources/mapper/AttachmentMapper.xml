@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sgnbs.ms.dao.AttachmentDAO">
+  <resultMap id="BaseResultMap" type="com.sgnbs.ms.model.Attachment">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="orginname" jdbcType="VARCHAR" property="orginname" />
+    <result column="filename" jdbcType="VARCHAR" property="filename" />
+    <result column="path" jdbcType="VARCHAR" property="path" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, orginname, filename, path, createtime, user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from attachment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from attachment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.sgnbs.ms.model.Attachment">
+    insert into attachment (id, orginname, filename, 
+      path, createtime, user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{orginname,jdbcType=VARCHAR}, #{filename,jdbcType=VARCHAR}, 
+      #{path,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{userId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.sgnbs.ms.model.Attachment">
+    insert into attachment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orginname != null">
+        orginname,
+      </if>
+      <if test="filename != null">
+        filename,
+      </if>
+      <if test="path != null">
+        path,
+      </if>
+      <if test="createtime != null">
+        createtime,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="orginname != null">
+        #{orginname,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.sgnbs.ms.model.Attachment">
+    update attachment
+    <set>
+      <if test="orginname != null">
+        orginname = #{orginname,jdbcType=VARCHAR},
+      </if>
+      <if test="filename != null">
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="path != null">
+        path = #{path,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createtime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.sgnbs.ms.model.Attachment">
+    update attachment
+    set orginname = #{orginname,jdbcType=VARCHAR},
+      filename = #{filename,jdbcType=VARCHAR},
+      path = #{path,jdbcType=VARCHAR},
+      createtime = #{createtime,jdbcType=TIMESTAMP},
+      user_id = #{userId,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findByIds" resultMap="BaseResultMap" parameterType="java.util.List">
+          select * from attachment where id in
+          <foreach collection="list" index="index" item="item" open="(" separator="," close=")">  
+            #{item}  
+        </foreach>
+  </select>
+</mapper>

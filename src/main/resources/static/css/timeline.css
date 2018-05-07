@@ -1,0 +1,40 @@
+.timeline {
+  font-size: 14px;
+  padding: 0 20px;
+}
+.timeline ul {
+  width: 100%;
+  margin: auto;
+}
+.timeline ul li {
+  padding: 10px 15px 15px;
+  float: left;
+  border-bottom: 2px solid #ccc;
+  position: relative;
+  box-sizing: border-box;
+}
+.timeline ul li em {
+  position: absolute;
+  left: 50%;
+  margin-left: -9px;
+  bottom: -10px;
+  width: 18px;
+  height: 18px;
+  background: #ccc;
+  border-radius: 50%;
+  box-sizing: border-box;
+  box-shadow: 1px 1px -1px #ccc inset;
+}
+.timeline ul li.pass em {
+  background: #7abd54;
+}
+.timeline ul li.fail em {
+  background: #f85e48;
+}
+.timeline ul li div {
+  line-height: 1.6em;
+  color: #333;
+}
+.timeline ul li div span {
+  color: #666;
+}

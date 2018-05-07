@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    active: dev
+  http:
+    encoding: 
+      charset: UTF-8
+      enabled: true
+      force: true
+  messages:
+    encoding: UTF-8
+  mvc:
+    view:
+      prefix: /views/
+      suffix: .jsp
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+banner:
+    charset: UTF-8
+server:
+  tomcat:
+    uri-encoding: UTF-8 
+mybatis:
+  type-aliases-package: com.sgnbs.ms.model
+  mapper-locations: classpath:mapper/*.xml
+databaseType: mysql
+
+
+      
