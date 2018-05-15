@@ -1,12 +1,11 @@
 package com.sgnbs.common.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import com.sgnbs.common.constants.Constants;
 import com.sgnbs.common.syscache.SysCache;
@@ -118,15 +117,7 @@ public class CrudUtil {
 		try {
 			Class<?> daoclz = SysCache.dao_map.get(clz.getSimpleName());
 			Class<?> idtype = MyReflectUtil.getIdType(clz);
-			if(null!=daoclz) {
-				Object dao = SpringUtil.getBean(daoclz);
-				Method insertMethod = dao.getClass().getMethod(Constants.SELECTBYPRIMARYKEY, idtype);
-				if(Integer.class==idtype) {
-					o = insertMethod.invoke(dao, Integer.parseInt(String.valueOf(id)));
-				}else {
-					o = insertMethod.invoke(dao, String.valueOf(id));
-				}
-			}
+			o = getObject(daoclz, idtype, o, String.valueOf(id));
 			if(null!=o && addannodata) MyReflectUtil.addAnnoData(o);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -146,15 +137,7 @@ public class CrudUtil {
 			Class<?> idtype = MyReflectUtil.getIdType(clz);
 			for(String id : ids.split(",")) {
 				Object model = null;
-				if(null!=daoclz) {
-					Object dao = SpringUtil.getBean(daoclz);
-					Method insertMethod = dao.getClass().getMethod(Constants.SELECTBYPRIMARYKEY, idtype);
-					if(Integer.class==idtype) {
-						model =	insertMethod.invoke(dao, Integer.parseInt(String.valueOf(id)));
-					}else {
-						model = insertMethod.invoke(dao, String.valueOf(id));
-					}
-				}
+				model = getObject(daoclz, idtype, model, String.valueOf(id));
 				if(null!=model && addannodata) MyReflectUtil.addAnnoData(model);
 				os.add(model);
 			}
@@ -163,7 +146,20 @@ public class CrudUtil {
 		}
 		return os;
 	}
-	
+
+	private static Object getObject(Class<?> daoclz, Class<?> idtype, Object model, String id) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+		if(null!=daoclz) {
+			Object dao = SpringUtil.getBean(daoclz);
+			Method insertMethod = dao.getClass().getMethod(Constants.SELECTBYPRIMARYKEY, idtype);
+			if(Integer.class==idtype) {
+				model =	insertMethod.invoke(dao, Integer.parseInt(id));
+			}else {
+				model = insertMethod.invoke(dao, id);
+			}
+		}
+		return model;
+	}
+
 	/**
 	 * 执行指定实体类中的dao方法
 	 * @param clz model class
@@ -200,7 +196,6 @@ public class CrudUtil {
 	 * 执行指定实体类中的dao方法
 	 * @param clz model class
 	 * @param methodname excute methodname
-	 * @param objects parameters
 	 * @return
 	 */
 	public static Object excuteDaoMethod(Class<?> clz,String methodname) {

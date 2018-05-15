@@ -112,8 +112,7 @@ public class LoginController extends BaseController {
 	}
 
 	@RequestMapping(value = "/logout")
-	public String logout(HttpSession session, SessionStatus status, HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+	public String logout() {
 		Subject subject = SecurityUtils.getSubject();
 		subject.logout();
 		return "/login";

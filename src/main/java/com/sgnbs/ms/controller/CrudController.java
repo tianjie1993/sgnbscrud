@@ -117,7 +117,7 @@ public class CrudController extends BaseController{
 	 */
 	@GetMapping("/jsondetail/{classname}")
 	@ResponseBody
-	public AjaxResult getJsonDetail(@PathVariable("classname") String classname,HttpServletRequest request) throws Exception{
+	public AjaxResult getJsonDetail(@PathVariable("classname") String classname,HttpServletRequest request) {
 		String modelname = StrUtil.getCamelClassname(classname);
 		String fields = request.getParameter("fields");
 		Class<?> model = SysCache.model_map.get(modelname);
@@ -143,7 +143,7 @@ public class CrudController extends BaseController{
 	 */
 	@GetMapping("/singledetail/{classname}")
 	@ResponseBody
-	public AjaxResult getSingleDetail(@PathVariable("classname") String classname,HttpServletRequest request) throws Exception{
+	public AjaxResult getSingleDetail(@PathVariable("classname") String classname,HttpServletRequest request) {
 		String modelname = StrUtil.getCamelClassname(classname);
 		String fields = request.getParameter("fields");
 		Class<?> model = SysCache.model_map.get(modelname);
@@ -217,8 +217,6 @@ public class CrudController extends BaseController{
 	 * @param classname
 	 * @param request
 	 * @return
-	 * @throws ClassNotFoundException
-	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 * @throws SecurityException
 	 * @throws NumberFormatException
@@ -229,7 +227,7 @@ public class CrudController extends BaseController{
 	@PostMapping("/physicald/{classname}")
 	@ResponseBody
 	@Transactional(rollbackFor=Exception.class)
-	public AjaxResult physicalDelete(@PathVariable("classname") String classname,HttpServletRequest request) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException, NumberFormatException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+	public AjaxResult physicalDelete(@PathVariable("classname") String classname,HttpServletRequest request) throws IllegalAccessException, SecurityException, NumberFormatException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
 		String ids = request.getParameter("id");
 		Class<?> model = SysCache.model_map.get(StrUtil.getCamelClassname(classname));;
   		SysCache.ClassMethod clzm = SysCache.deldo_map.get(StrUtil.getCamelClassname(classname));
@@ -252,7 +250,6 @@ public class CrudController extends BaseController{
 	 * @param classname
 	 * @param request
 	 * @return
-	 * @throws ClassNotFoundException
 	 * @throws InstantiationException
 	 * @throws IllegalAccessException
 	 * @throws SecurityException
@@ -264,7 +261,7 @@ public class CrudController extends BaseController{
 	@PostMapping("/logicald/{classname}")
 	@ResponseBody
 	@Transactional(rollbackFor=Exception.class)
-	public AjaxResult logicalDelete(@PathVariable("classname") String classname,HttpServletRequest request) throws ClassNotFoundException, InstantiationException, IllegalAccessException, SecurityException, NumberFormatException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+	public AjaxResult logicalDelete(@PathVariable("classname") String classname,HttpServletRequest request) throws InstantiationException, IllegalAccessException, SecurityException, NumberFormatException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
 		String ids = request.getParameter("id");
 		String [] idsz = ids.split(",");
 		classname = StrUtil.getCamelClassname(classname);

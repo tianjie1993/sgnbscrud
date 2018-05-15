@@ -25,11 +25,7 @@ public class AjaxResult {
 	}
 
 	public static AjaxResult success(String desc,Object o){
-		AjaxResult res = new AjaxResult();
-		res.setCode(SUCCESS_CODE);
-		res.setDesc(desc);
-		res.setResult(o);
-		return res;
+		return new AjaxResult(SUCCESS_CODE,desc,o);
 	}
 	
 	public static AjaxResult success(){
@@ -48,11 +44,7 @@ public class AjaxResult {
 	}
 	
 	public static AjaxResult error(String desc,Object o){
-		AjaxResult res = new AjaxResult();
-		res.setCode(FALURE_CODE);
-		res.setDesc(desc);
-		res.setResult(o);
-		return res;
+		return new AjaxResult(FALURE_CODE,desc,o);
 	}
 	public static AjaxResult error(String desc){
 		AjaxResult res = new AjaxResult();

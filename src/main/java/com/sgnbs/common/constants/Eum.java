@@ -9,8 +9,8 @@ public interface Eum {
 	
 	interface SysMenu{
 		interface isshow{
-			public static final Integer MORENZHANSHI = 1;
-			public static final Integer XUYAOQUANXIAN = 2;
+			Integer MORENZHANSHI = 1;
+			Integer XUYAOQUANXIAN = 2;
 		}
 	}
 
