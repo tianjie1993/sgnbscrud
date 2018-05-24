@@ -68,11 +68,11 @@ public class SysCache implements CommandLineRunner{
         		ToDetail toDetail = method.getAnnotation(ToDetail.class);
         		ToSave toSave = method.getAnnotation(ToSave.class);
         		DelDo delDo = method.getAnnotation(DelDo.class);
-				addToMap(clz, method, null != listdo, listdo_map, listdo.value().getSimpleName());
-				addToMap(clz, method, null!=saveDo, savedo_map, saveDo.value().getSimpleName());
-				addToMap(clz, method, null!=toDetail, todetail_map, toDetail.value().getSimpleName());
-				addToMap(clz, method, null!=delDo, todetail_map, delDo.value().getSimpleName());
-				addToMap(clz, method, null!=toSave, tosave_map, toSave.value().getSimpleName());
+				addToMap(clz, method, null != listdo, listdo_map, null != listdo?listdo.value().getSimpleName():"");
+				addToMap(clz, method, null!=saveDo, savedo_map, null != saveDo?saveDo.value().getSimpleName():"");
+				addToMap(clz, method, null!=toDetail, todetail_map, null != toDetail?toDetail.value().getSimpleName():"");
+				addToMap(clz, method, null!=delDo, todetail_map, null != delDo?delDo.value().getSimpleName():"");
+				addToMap(clz, method, null!=toSave, tosave_map, null != toSave?toSave.value().getSimpleName():"");
 			}
         }
 
@@ -110,7 +110,7 @@ public class SysCache implements CommandLineRunner{
 	/**
 	 * key-驼峰实体类名.value-对应modelclass
 	 */
-	public static final Map<String,Class<?>> model_map = new HashMap<String,Class<?>>();
+	public static final Map<String,Class<?>> model_map = new HashMap<>();
 	/**
 	 * key-驼峰实体类名.value-对应daoclass
 	 */
@@ -136,6 +136,7 @@ public class SysCache implements CommandLineRunner{
 	 * key-驼峰实体类名.value-对应ClassMethod
 	 */
 	public static final Map<String,ClassMethod> tosave_map = new HashMap<String,ClassMethod>();
+
 
 	
 	 public class ClassMethod {

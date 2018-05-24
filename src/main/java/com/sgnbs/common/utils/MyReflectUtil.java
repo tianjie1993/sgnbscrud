@@ -184,4 +184,20 @@ public class MyReflectUtil {
         return null;
 	}
 
+	public static String getIdName(Object o){
+		Field[] declaredFields = null;
+		if(o instanceof Class) {
+			Class<?> clz = (Class<?>)o;
+			declaredFields = clz.getDeclaredFields();
+		}else {
+			declaredFields = o.getClass().getDeclaredFields();
+		}
+		for (Field field : declaredFields) {
+			if(null != field.getAnnotation(ID.class)) {
+				return  field.getName();
+			}
+		}
+		return null;
+	}
+
 }

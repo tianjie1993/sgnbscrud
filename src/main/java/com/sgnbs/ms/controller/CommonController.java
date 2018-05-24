@@ -1,16 +1,18 @@
 package com.sgnbs.ms.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.sgnbs.common.constants.AjaxResult;
+import com.sgnbs.common.excel.ExcelDataImportUtil;
+import com.sgnbs.common.utils.SpringUtil;
+import com.sgnbs.common.utils.StrUtil;
+import com.sgnbs.common.utils.UpDownUtil;
+import com.sgnbs.common.utils.YmlConfig;
+import com.sgnbs.ms.dao.FastListDAO;
+import com.sgnbs.ms.dao.SysSelectkyDAO;
+import com.sgnbs.ms.model.Attachment;
+import com.sgnbs.ms.model.SysSelectky;
+import com.sgnbs.ms.service.intf.AttachmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,18 +23,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import com.sgnbs.common.constants.AjaxResult;
-import com.sgnbs.common.utils.StrUtil;
-import com.sgnbs.common.utils.UpDownUtil;
-import com.sgnbs.common.utils.YmlConfig;
-import com.sgnbs.ms.dao.FastListDAO;
-import com.sgnbs.ms.dao.SysSelectkyDAO;
-import com.sgnbs.ms.model.Attachment;
-import com.sgnbs.ms.model.SysSelectky;
-import com.sgnbs.ms.service.intf.AttachmentService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -51,7 +50,8 @@ public class CommonController extends BaseController{
 	
 	@Autowired
 	private FastListDAO fastListDAO;
-	
+
+
 	/**
 	 * 在多表链接查询时针对外键选择keyvalue值
 	 * tablename 需要查询的表
@@ -196,6 +196,4 @@ public class CommonController extends BaseController{
 		
 	}
 
-	
-	
 }

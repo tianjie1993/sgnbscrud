@@ -36,12 +36,22 @@ public class EumUtil {
 		}
 		return kvs;
 	}
-	
+
 	public static String getEumValuename(String tablename,String fieldname,String keystr){
 		List<KeyValue> kvs = getByTFname(tablename, fieldname);
 		for(KeyValue kv : kvs) {
 			if(String.valueOf(kv.getKey()).equals(keystr)) {
 				return kv.getValue();
+			}
+		}
+		return null;
+	}
+
+	public static String getEumNamevalue(String tablename,String fieldname,String valuestr){
+		List<KeyValue> kvs = getByTFname(tablename, fieldname);
+		for(KeyValue kv : kvs) {
+			if(String.valueOf(kv.getValue()).equals(valuestr)) {
+				return kv.getKey()+"";
 			}
 		}
 		return null;

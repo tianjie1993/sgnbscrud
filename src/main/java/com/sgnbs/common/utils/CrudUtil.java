@@ -2,10 +2,7 @@ package com.sgnbs.common.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.sgnbs.common.constants.Constants;
 import com.sgnbs.common.syscache.SysCache;
@@ -53,25 +50,41 @@ public class CrudUtil {
 	public static String getViewName() {
 		return VIEWNAME.get();
 	}
-	
+
 	public static void removeViewName() {
 		VIEWNAME.remove();
 	}
-	
+
 	public static Object insertEntity(Object o) {
 		try {
+			insertEntitys(o);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return o;
+	}
+
+	public static void insertEntitys(Object o) throws Exception {
+		if(o instanceof Collection) {
+			Collection<?> os = (Collection<?>) o;
+			for(Object temp : os) {
+				Class<?> daoclz = SysCache.dao_map.get(temp.getClass().getSimpleName());
+				if(null!=daoclz) {
+					Object dao = SpringUtil.getBean(daoclz);
+					Method insertMethod = dao.getClass().getMethod(Constants.INSERTSELECTIVE, temp.getClass());
+					insertMethod.invoke(dao, temp);
+				}
+			}
+		}else {
 			Class<?> daoclz = SysCache.dao_map.get(o.getClass().getSimpleName());
 			if(null!=daoclz) {
 				Object dao = SpringUtil.getBean(daoclz);
 				Method insertMethod = dao.getClass().getMethod(Constants.INSERTSELECTIVE, o.getClass());
 				insertMethod.invoke(dao, o);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return o;
 	}
-	
+
 	public static Object updateEntity(Object o){
 		try {
 			Class<?> daoclz = SysCache.dao_map.get(o.getClass().getSimpleName());
@@ -85,7 +98,29 @@ public class CrudUtil {
 		}
 		return o;
 	}
-	
+	public static void delEntity(Object o){
+		try {
+			Class clz = o.getClass();
+			Class<?> daoclz = SysCache.dao_map.get(clz.getSimpleName());
+			Class<?> idtype = MyReflectUtil.getIdType(clz);
+			String fieldname = MyReflectUtil.getIdName(clz);
+			Method getIdm = clz.getMethod("get"+StrUtil.firstCharToUpperCase(fieldname));
+			Object id  = getIdm.invoke(o);
+			if(null!=daoclz) {
+				Object dao = SpringUtil.getBean(daoclz);
+				Method insertMethod = dao.getClass().getMethod(Constants.DELETEBYPRIMARYKEY, idtype);
+					if(idtype==Integer.class) {
+						insertMethod.invoke(dao, Integer.parseInt(String.valueOf(id)));
+					}else {
+						insertMethod.invoke(dao, String.valueOf(id));
+					}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	public static void delEntitys(Class<?> clz,String ids){
 		try {
 			Class<?> daoclz = SysCache.dao_map.get(clz.getSimpleName());
@@ -105,6 +140,22 @@ public class CrudUtil {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public static void delEntitys(Object o){
+		try {
+			if(o instanceof Collection) {
+				Collection<?> os = (Collection<?>) o;
+				for(Object temp : os) {
+					delEntity(temp);
+				}
+			}else {
+				delEntity(o);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	public static Object getEntity(Class<?> clz,Object id){
@@ -191,7 +242,8 @@ public class CrudUtil {
 		}
 		return null;
 	}
-	
+
+
 	/**
 	 * 执行指定实体类中的dao方法
 	 * @param clz model class

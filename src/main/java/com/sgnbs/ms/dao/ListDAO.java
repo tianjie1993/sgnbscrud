@@ -3,6 +3,7 @@ package com.sgnbs.ms.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.sgnbs.ms.annotation.FindList;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;

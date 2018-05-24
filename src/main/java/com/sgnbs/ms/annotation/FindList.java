@@ -17,5 +17,5 @@ public @interface FindList {
 	
 	Class<?> value();
 	
-	String num();
+	int num() default 1;
 }
