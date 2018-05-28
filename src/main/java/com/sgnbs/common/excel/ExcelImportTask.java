@@ -9,6 +9,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
+import org.springframework.web.context.ContextLoader;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -47,6 +52,10 @@ public class ExcelImportTask implements Runnable {
 
     @Override
     public void run() {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        PlatformTransactionManager txManager = SpringUtil.getBean(PlatformTransactionManager.class);
+        TransactionStatus status = txManager.getTransaction(def);
         try {
             if(!checkExcel()){
                 return;
@@ -74,11 +83,13 @@ public class ExcelImportTask implements Runnable {
                         writeLog("执行回调方法错误，错误信息:"+result.getErrormsg());
                         writeLog("回滚数据！");
                         //目前支持多个不同sheet插入。用删除代替事务回滚
-                        CrudUtil.delEntitys(datalist);
+//                        CrudUtil.delEntitys(datalist);
+                        txManager.rollback(status);
                     }else{
                         writeLog("回调方法执行成功，sheet【"+(i+1)+"】:数据插入成功！");
                     }
                 }else{
+                    txManager.commit(status);
                     writeLog("sheet【"+(i+1)+"】数据插入成功！");
                 }
 

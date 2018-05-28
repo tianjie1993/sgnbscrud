@@ -1,9 +1,7 @@
 package com.sgnbs.common.excel;
 
-import com.sgnbs.common.excel.ExcelImportTask;
 import com.sgnbs.common.excel.callback.ExcelCallback;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
