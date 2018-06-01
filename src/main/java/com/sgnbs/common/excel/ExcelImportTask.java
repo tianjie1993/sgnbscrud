@@ -8,13 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-import org.springframework.web.context.ContextLoader;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -82,8 +81,6 @@ public class ExcelImportTask implements Runnable {
                     if(!result.getIssuccess()){
                         writeLog("执行回调方法错误，错误信息:"+result.getErrormsg());
                         writeLog("回滚数据！");
-                        //目前支持多个不同sheet插入。用删除代替事务回滚
-//                        CrudUtil.delEntitys(datalist);
                         txManager.rollback(status);
                     }else{
                         writeLog("回调方法执行成功，sheet【"+(i+1)+"】:数据插入成功！");
@@ -227,7 +224,7 @@ public class ExcelImportTask implements Runnable {
             if (cell.getCellTypeEnum() == CellType.BOOLEAN) {
                 returnvalue =  String.valueOf(cell.getBooleanCellValue());
             } else if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-                returnvalue = String.valueOf(cell.getNumericCellValue());
+                returnvalue = NumberToTextConverter.toText(cell.getNumericCellValue());
             } else if(cell.getCellTypeEnum() == CellType.FORMULA){
                 returnvalue = cell.getCellFormula();
             } else if(cell.getCellTypeEnum() == CellType.ERROR){
