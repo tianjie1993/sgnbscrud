@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.sgnbs.common.constants.AjaxResult;
 import com.sgnbs.common.constants.Constants;
 import com.sgnbs.common.constants.LayuiAjaxData;
+import com.sgnbs.common.exception.CrudException;
 import com.sgnbs.common.syscache.SysCache;
 import com.sgnbs.common.utils.*;
 import com.sgnbs.ms.annotation.ID;
@@ -33,8 +34,8 @@ import java.util.Set;
 @Controller
 @RequestMapping("/crud")
 @Slf4j
-public class CrudController extends BaseController{
-	
+public class CrudController extends BaseController {
+
 	@Autowired
 	private ListDAO listDAO;
 	/**
@@ -48,7 +49,7 @@ public class CrudController extends BaseController{
 		ModelAndView mv = new ModelAndView("/"+classname+"/list");
 		return mv;
 	}
-	
+
 	/**
 	 * 通用到新增修改页面
 	 * @param classname
@@ -61,7 +62,10 @@ public class CrudController extends BaseController{
 		Class<?> model = SysCache.model_map.get(modelname);
 		Object model_ins = model.newInstance();
 		String id = request.getParameter("id");
-		if(StrUtil.notBlank(id)) {
+		String deptid = request.getParameter("deptid");
+		if(StrUtil.notBlank(deptid)) {
+			mv.addObject("deptid", deptid);
+		}else if(StrUtil.notBlank(id)) {
 			model_ins = CrudUtil.getEntity(model, id);
 		}else {
 			CrudUtil.setSaveNew();
@@ -81,7 +85,7 @@ public class CrudController extends BaseController{
 	 * 通用到详情页面
 	 * @param classname
 	 * @return
-	 * @throws ClassNotFoundException 
+	 * @throws Exception
 	 */
 	@GetMapping("/todetail/{classname}")
 	public ModelAndView toDetail(@PathVariable("classname") String classname,HttpServletRequest request) throws Exception{
@@ -117,7 +121,7 @@ public class CrudController extends BaseController{
 	 */
 	@GetMapping("/jsondetail/{classname}")
 	@ResponseBody
-	public AjaxResult getJsonDetail(@PathVariable("classname") String classname,HttpServletRequest request) {
+	public AjaxResult getJsonDetail(@PathVariable("classname") String classname, HttpServletRequest request) throws Exception{
 		String modelname = StrUtil.getCamelClassname(classname);
 		String fields = request.getParameter("fields");
 		Class<?> model = SysCache.model_map.get(modelname);
@@ -143,7 +147,7 @@ public class CrudController extends BaseController{
 	 */
 	@GetMapping("/singledetail/{classname}")
 	@ResponseBody
-	public AjaxResult getSingleDetail(@PathVariable("classname") String classname,HttpServletRequest request) {
+	public AjaxResult getSingleDetail(@PathVariable("classname") String classname, HttpServletRequest request) throws Exception{
 		String modelname = StrUtil.getCamelClassname(classname);
 		String fields = request.getParameter("fields");
 		Class<?> model = SysCache.model_map.get(modelname);
@@ -166,18 +170,12 @@ public class CrudController extends BaseController{
 	 * @param classname
 	 * @param map
 	 * @return
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws ClassNotFoundException 
-	 * @throws InstantiationException 
+	 * @throws Exception
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping("/list/{classname}")
 	@ResponseBody
-	public LayuiAjaxData getListData(@PathVariable("classname") String classname,@RequestParam Map<String,String>  map) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException, InstantiationException{
+	public LayuiAjaxData getListData(@PathVariable("classname") String classname, @RequestParam Map<String,String>  map) throws Exception {
 		String fixedprams  = map.get("fixedprams");
 		if(StrUtil.notBlank(map.get("page")) && StrUtil.notBlank(map.get("limit"))) {
 			PageHelper.startPage(Integer.parseInt(map.get("page")), Integer.parseInt(map.get("limit")));
@@ -209,6 +207,33 @@ public class CrudController extends BaseController{
 		return LayuiAjaxData.success(page.getResult(), page.getTotal());
 	}
 	
+	@GetMapping("/alllist/{classname}")
+	@ResponseBody
+	public AjaxResult getallListData(@PathVariable("classname") String classname, @RequestParam Map<String,String>  map) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, ClassNotFoundException, InstantiationException{
+		String fixedprams  = map.get("fixedprams");
+		map.remove("fixedprams");
+		//处理固定参数
+		if(StrUtil.notBlank(fixedprams)) {
+			String []keyvalues = fixedprams.split(",");
+			for(String kv : keyvalues) {
+				String []kav = kv.split("=");
+				if(kav.length==2) {
+					map.put(kav[0], kav[1]);
+				}
+			}
+		}
+		//添加个性化变量
+		String modelname = StrUtil.getCamelClassname(classname);
+		SysCache.ClassMethod clzm = SysCache.listdo_map.get(modelname);
+		if(null!=clzm) {
+			clzm.getMethod().invoke(SpringUtil.getBean(clzm.getClz()), map);
+		}
+		String methodname = "find"+StrUtil.getCamelClassname(classname)+"List";
+		Method querymethod = listDAO.getClass().getMethod(methodname, Map.class);
+		List<Map<String,String>> lists= (List<Map<String, String>>) querymethod.invoke(listDAO, map);
+		ListDataUtil.transformData(lists);
+		return AjaxResult.success(lists);
+	}
 	
 	
 	/**
@@ -217,17 +242,12 @@ public class CrudController extends BaseController{
 	 * @param classname
 	 * @param request
 	 * @return
-	 * @throws IllegalAccessException
-	 * @throws SecurityException
-	 * @throws NumberFormatException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
+	 * @throws Exception
 	 */
 	@PostMapping("/physicald/{classname}")
 	@ResponseBody
 	@Transactional(rollbackFor=Exception.class)
-	public AjaxResult physicalDelete(@PathVariable("classname") String classname,HttpServletRequest request) throws IllegalAccessException, SecurityException, NumberFormatException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+	public AjaxResult physicalDelete(@PathVariable("classname") String classname, HttpServletRequest request) throws Exception {
 		String ids = request.getParameter("id");
 		Class<?> model = SysCache.model_map.get(StrUtil.getCamelClassname(classname));;
   		SysCache.ClassMethod clzm = SysCache.deldo_map.get(StrUtil.getCamelClassname(classname));
@@ -250,18 +270,12 @@ public class CrudController extends BaseController{
 	 * @param classname
 	 * @param request
 	 * @return
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws SecurityException
-	 * @throws NumberFormatException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
+	 * @throws Exception
 	 */
 	@PostMapping("/logicald/{classname}")
 	@ResponseBody
 	@Transactional(rollbackFor=Exception.class)
-	public AjaxResult logicalDelete(@PathVariable("classname") String classname,HttpServletRequest request) throws InstantiationException, IllegalAccessException, SecurityException, NumberFormatException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException {
+	public AjaxResult logicalDelete(@PathVariable("classname") String classname, HttpServletRequest request) throws Exception {
 		String ids = request.getParameter("id");
 		String [] idsz = ids.split(",");
 		classname = StrUtil.getCamelClassname(classname);
@@ -302,13 +316,13 @@ public class CrudController extends BaseController{
 		}
 	    return AjaxResult.success();
 	}
-	
+
 	/**
 	 * 数据保存通过入口
 	 * @param classname
 	 * @param map
 	 * @return
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	@PostMapping("/save/{classname}")
 	@Transactional(rollbackFor=Exception.class)
@@ -324,6 +338,7 @@ public class CrudController extends BaseController{
 		String errormsg = CrudUtil.getErrorMsg();
 		if(StrUtil.notBlank(errormsg)) {
 			returnModal(ERROR, errormsg, mv);
+			CrudUtil.delEntity(model_ins);
 			CrudUtil.removeErrorMsg();
 		}else {
 			CrudUtil.updateEntity(model_ins);
@@ -338,6 +353,33 @@ public class CrudController extends BaseController{
 			mv.setViewName("/"+classname.replace("_", "").toLowerCase()+"/save");
 		}
 		return mv;
+	}
+
+	@PostMapping("/ajaxsave/{classname}")
+	@ResponseBody
+	@Transactional(rollbackFor=Exception.class)
+	public AjaxResult saveEntityofAjax(@PathVariable("classname") String classname, @RequestParam Map<String,String>  map) throws Exception {
+		String modelname = StrUtil.getCamelClassname(classname);
+		Class<?> model = SysCache.model_map.get(modelname);
+		Object model_ins = model.newInstance();
+		save(model_ins,map);
+		//3.对实体类中的枚举项、文件进行填充。
+		MyReflectUtil.addAnnoData(model_ins);
+		//4.对应个性化主动反映的错误信息设置
+		CrudUtil.removeViewName();
+		String errormsg = CrudUtil.getErrorMsg();
+		CrudUtil.removeErrorMsg();
+		if(StrUtil.notBlank(errormsg) && CrudUtil.isNew()) {
+			CrudUtil.removeIsNew();
+			CrudUtil.delEntity(model_ins);
+			return AjaxResult.error(errormsg);
+		}else if(StrUtil.notBlank(errormsg) && !CrudUtil.isNew()){
+			throw  new CrudException(errormsg);
+		}else if(StrUtil.isBlank(errormsg)){
+			CrudUtil.updateEntity(model_ins);
+		}
+		return AjaxResult.success();
+
 	}
 	
 	/**
@@ -358,6 +400,7 @@ public class CrudController extends BaseController{
 		String errormsg = CrudUtil.getErrorMsg();
 		if(StrUtil.notBlank(errormsg)) {
 			returnError(errormsg, mv);
+			CrudUtil.delEntity(model_ins);
 			CrudUtil.removeErrorMsg();
 		}else {
 			CrudUtil.updateEntity(model_ins);
@@ -367,8 +410,6 @@ public class CrudController extends BaseController{
 		if(StrUtil.notBlank(CrudUtil.getViewName())) {
 			mv.setViewName(CrudUtil.getViewName());
 			CrudUtil.removeViewName();
-		}else {
-			mv.setViewName("/"+classname.replace("_", "").toLowerCase()+"/save");
 		}
 		return mv;
 	}
@@ -394,6 +435,7 @@ public class CrudController extends BaseController{
 			try {
 				field = model.getDeclaredField(key);
 			} catch (NoSuchFieldException e) {
+				log.warn("no such field {}",key);
 			}
 			if(null!=field) {
 				Method  m = model.getMethod("set"+StrUtil.firstUppercase(key), field.getType());
@@ -407,10 +449,10 @@ public class CrudController extends BaseController{
 					String dateStr = map.get(key);
 					Date date = null;
 					if(dateStr.length()==DateTools.YYYYMMDD.length()) {
-						date = DateTools.getDate(map.get(key), DateTools.YYYYMMDD);	
+						date = DateTools.getDate(map.get(key), DateTools.YYYYMMDD);
 					}
 					if(dateStr.length()==DateTools.YYYYMMDDHHMMSS.length()) {
-						date = DateTools.getDate(map.get(key), DateTools.YYYYMMDDHHMMSS);	
+						date = DateTools.getDate(map.get(key), DateTools.YYYYMMDDHHMMSS);
 					}
 					m.invoke(model_ins, date);
 				}
