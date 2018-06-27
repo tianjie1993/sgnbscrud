@@ -1,20 +1,18 @@
 package com.sgnbs.common.utils;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sgnbs.common.constants.AjaxResult;
+import com.sgnbs.common.exception.CrudException;
 import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.NoHandlerFoundException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sgnbs.common.constants.AjaxResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 
 @ControllerAdvice  
@@ -30,7 +28,9 @@ public class ExcepetionHandler {
 		  String msg = "";
 		  if(exception instanceof AuthorizationException) {
 			  msg="没有可用的访问权限！";
-		  }else {
+		  }else if (exception instanceof CrudException){
+			  msg = exception.getMessage();
+		  }else{
 			  msg = "系统内部错误，请联系管理员！";
 		  }
 		  if (!(request.getHeader("accept").contains("application/json")  || (request.getHeader("X-Requested-With")!= null && request
