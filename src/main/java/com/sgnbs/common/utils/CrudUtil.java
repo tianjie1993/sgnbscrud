@@ -160,6 +160,7 @@ public class CrudUtil {
 	
 	public static Object getEntity(Class<?> clz,Object id){
 		return getEntity(clz,id,false);
+
 	}
 
 	

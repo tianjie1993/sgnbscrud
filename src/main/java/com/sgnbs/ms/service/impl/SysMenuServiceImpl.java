@@ -82,11 +82,6 @@ public class SysMenuServiceImpl implements SysMenuService {
 		return sysMenuDAO.selectByPrimaryKey(uuid);
 	}
 
-	@Override
-	public List<SysMenu> findByParentMenu() {
-		return sysMenuDAO.findByParentidOrUuid("0","0");
-	}
-
 
 	@Override
 	public List<SysMenu> findByShowMenu(Integer isshowShow) {

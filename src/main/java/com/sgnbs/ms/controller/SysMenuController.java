@@ -110,17 +110,7 @@ public class SysMenuController extends BaseController{
 		return mv;
 	}
 	
-	@GetMapping("/tosave")
-	public ModelAndView toSave(SysMenu menu){
-		ModelAndView mv = new ModelAndView("/sys/menu/menusave");
-		if(null!=menu.getId()){
-			menu = sysMenuService.findById(menu.getId());
-			mv.addObject("menu",menu);
-		}
-		mv.addObject("parents", sysMenuService.findByParentMenu());
-		return mv;
-	}
-	
+
 	/**
 	 * 菜单通用入口
 	 * @param menu

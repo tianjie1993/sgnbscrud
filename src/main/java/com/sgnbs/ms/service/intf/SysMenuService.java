@@ -23,7 +23,6 @@ public interface SysMenuService {
 
 	SysMenu findById(Integer uuid);
 
-	List<SysMenu> findByParentMenu();
 
 	List<SysMenu> findByShowMenu(Integer morenzhanshi);
 

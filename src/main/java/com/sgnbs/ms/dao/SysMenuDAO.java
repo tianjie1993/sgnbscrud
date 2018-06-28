@@ -10,8 +10,7 @@ import com.sgnbs.ms.model.SysMenu;
 @Mapper
 public interface SysMenuDAO{
 	
-	SysMenu findOne(SysMenu t);
-	
+
 	int deleteByPrimaryKey(Integer id);
 
     int insert(SysMenu record);
@@ -23,13 +22,6 @@ public interface SysMenuDAO{
     int updateByPrimaryKeySelective(SysMenu record);
 
     int updateByPrimaryKey(SysMenu record);
-	
-	List<SysMenu>  findByUuidInOrderBySort(Collection<String> args);
-
-	List<SysMenu> findByParentidOrUuid(String parentid,String uuid);
-
-	List<SysMenu> findByIsshow(String isshowShow);
-
 
 	List<SysMenu> findAll();
 
@@ -41,7 +33,6 @@ public interface SysMenuDAO{
 	
 	List<SysMenu> findShowMenu();
 
-	List<SysMenu> findByUuidInOrIsshowOrderBySort(List<String> asList, Integer isshowShow);
 
 	
 

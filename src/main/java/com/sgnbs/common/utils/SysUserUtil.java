@@ -1,10 +1,6 @@
 package com.sgnbs.common.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.shiro.SecurityUtils;
 
@@ -45,9 +41,8 @@ public class SysUserUtil {
 	}
 	
 	public static List<SysMenu> getUserMenus(){
-		Set<SysMenu> set = new HashSet<SysMenu>();
+		Set<SysMenu> set = new TreeSet<>(Comparator.comparing(SysMenu::getId));
 		List<SysMenu> list = new ArrayList<SysMenu>();
-
 		List<SysRole> rolelist = getUserRoles();
 		SysMenu temp = new SysMenu();
 		temp.setIsshow(Eum.SysMenu.isshow.MORENZHANSHI);
