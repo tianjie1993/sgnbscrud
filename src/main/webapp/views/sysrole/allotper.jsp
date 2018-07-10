@@ -46,7 +46,7 @@
 				}
 			}
 		}
-		$.getJSON("${basePath}/action/LoadTree?id="+$("#roleid").val(),function(data){
+		$.getJSON("${basePath}/role/LoadPermissionTree?check=1&id="+$("#roleid").val(),function(data){
 			$.fn.zTree.init($("#ztree"), setting, data).expandAll(true);
 		});
 	}

@@ -41,8 +41,9 @@
 					<dl class="layui-nav-child">
 						<dd><a data-id="100" data-type="tabAdd" href="javascript:;" data-href="${basePath}/crud/tolist/fieldcheck">系统枚举项管理</a></dd>
 						<dd><a data-id="101" data-type="tabAdd" href="javascript:;" data-href="${basePath}/crud/tolist/sys_selectky">选择弹出框管理</a></dd>
-						<dd><a data-id="102" data-type="tabAdd" href="javascript:;" data-href="${basePath}/crud/tolist/sys_action">功能按钮管理</a></dd>
 						<dd><a data-id="103" data-type="tabAdd" href="javascript:;" data-href="${basePath}/crud/tolist/sys_menu">系统菜单</a></dd>
+						<dd><a data-id="104" data-type="tabAdd" href="javascript:;" data-href="${basePath}/crud/tolist/sys_permission">权限注册中心</a></dd>
+
 					</dl>
 				</li>
 			</c:if>

@@ -27,17 +27,21 @@
 				</form>
 			</div>
 			<div class="list-btns">
-				<c:forEach items="${actions }" var="action">
-					<c:if test="${action.type == 1 }">
-						<button class="layui-btn layui-btn-small layui-btn-primary" onclick="toLocation('${action.url}','${action.canbatch }','${action.needid}')"><i class="layui-icon">&#${action.btnclass}</i>${action.name }</button>
-					</c:if>
-					<c:if test="${action.type == 2 }">
-						<button class="layui-btn layui-btn-small layui-btn-primary" onclick="openwin('${action.name}','${action.url}','${action.winxy}','${action.canbatch }','${action.needid}')"><i class="layui-icon">&#${action.btnclass}</i>${action.name }</button>
-					</c:if>
-					<c:if test="${action.type == 3 }">
-						<button class="layui-btn layui-btn-small layui-btn-primary" onclick="ajaxreq('${action.url}','${action.canbatch }','${action.needid}')"><i class="layui-icon">&#${action.btnclass}</i>${action.name }</button>
-					</c:if>
-				</c:forEach>
+
+				<shiro:hasPermission name="user:add">
+					<button class="layui-btn layui-btn-small layui-btn-primary" onclick="openwin('新增','/crud/tosave/sys_user','600px,600px','2','2')"><i class="layui-icon">&#xe654;</i>新增</button>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="user:edit">
+					<button class="layui-btn layui-btn-small layui-btn-primary" onclick="openwin('编辑','/crud/tosave/sys_user','600px,600px','2','1')"><i class="layui-icon">&#xe654;</i>编辑</button>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="user:del">
+					<button class="layui-btn layui-btn-small layui-btn-primary" onclick="ajaxreq('/crud/physicald/sys_user','1','1')"><i class="layui-icon">&#xe640;</i>删除</button>
+				</shiro:hasPermission>
+				<shiro:hasPermission name="user:allotrole">
+					<button class="layui-btn layui-btn-small layui-btn-primary" onclick="openwin('分配角色','/user/toallotrole','500px,500px','2','1')"><i class="layui-icon">&#xe613;</i>分配角色</button>
+				</shiro:hasPermission>
+
+
 			</div>
 		</div>
 			

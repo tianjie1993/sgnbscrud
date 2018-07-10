@@ -17,6 +17,7 @@ var basePath = '<%=request.getAttribute("basePath")%>';
 </script>
 <!-- 通用控件 -->
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <link rel="stylesheet" type="text/css" href="${staticPath}/layui/css/layui.css"/>
 <link rel="stylesheet" type="text/css" href="${staticPath}/css/reset.css"/>
 <link rel="stylesheet" type="text/css" href="${staticPath}/css/main.css"/>
