@@ -179,6 +179,8 @@ public class SysRoleController extends BaseController{
 			Map<String,Object> treemap = new HashMap<String,Object>();
 			treemap.put("id", "m_"+menu.getId());
 			treemap.put("name", menu.getName());
+			treemap.put("pid", "m_"+menu.getParentid());
+
 			if(menuids.contains(menu.getId())){
 				treemap.put("checked", true);
 			}
