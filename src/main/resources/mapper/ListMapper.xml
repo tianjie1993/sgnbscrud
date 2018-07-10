@@ -79,6 +79,16 @@
 		 	</if>
 		 </where>
 	</select>
+
+	<select id="findSysPermissionList" resultType="java.util.Map">
+		select  id, permission, remark, parentid, type, name
+		from sys_permission
+		<where>
+			<if test="name!=null and name!=''">
+				and name like concat('%',#{name},'%')
+			</if>
+		</where>
+	</select>
 	
 	
 </mapper>
