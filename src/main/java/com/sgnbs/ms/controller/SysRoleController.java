@@ -1,15 +1,19 @@
 package com.sgnbs.ms.controller;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.sgnbs.common.constants.Eum;
+import com.sgnbs.common.utils.CrudUtil;
+import com.sgnbs.common.utils.MyReflectUtil;
+import com.sgnbs.common.utils.SysUserUtil;
+import com.sgnbs.ms.model.SysMenu;
+import com.sgnbs.ms.model.SysPermission;
+import com.sgnbs.ms.service.intf.SysMenuService;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +42,11 @@ public class SysRoleController extends BaseController{
 	
 	@Autowired
 	private SysUserService sysUserService;
-	
+
+	@Autowired
+	private SysMenuService sysMenuService;
+
+
 	@GetMapping("/toallotmenu")
 	@RequiresPermissions("role:allotmenu")
 	public ModelAndView toallotMenu(HttpServletRequest request){
@@ -48,10 +56,10 @@ public class SysRoleController extends BaseController{
 		return mv;
 	}
 	
-	@GetMapping("/toallotbtn")
-	@RequiresPermissions("role:allotbtn")
+	@GetMapping("/toallotper")
+	@RequiresPermissions("role:allotper")
 	public ModelAndView toallotBtn(HttpServletRequest request){
-		ModelAndView mv = new ModelAndView("/sysrole/allotbtn");
+		ModelAndView mv = new ModelAndView("/sysrole/allotper");
 		String id = request.getParameter("id");
 		mv.addObject("roleid", id);
 		return mv;
@@ -83,11 +91,24 @@ public class SysRoleController extends BaseController{
 		String ids = request.getParameter("btnids");
 		String roleid = request.getParameter("roleid");
 		SysRole role = sysRoleService.findById(roleid);
+		List<Integer> menuids = new ArrayList<>();
+		List<Integer> perids = new ArrayList<>();
+
 		if(role==null){
-			return AjaxResult.error("用户不存在！");
+			return AjaxResult.error("角色不存在！");
 		}else{
-			role.setActionIds(ids);
-			sysRoleService.save(role);
+			if(StrUtil.notBlank(ids)){
+				for(String id : ids.split(",")){
+					if(id.startsWith("m")){
+						menuids.add(Integer.parseInt(id.replace("m_","")));
+					}else{
+						perids.add(Integer.parseInt(id));
+					}
+				}
+				role.setActionIds(StringUtils.join(perids,","));
+				role.setMenuIds(StringUtils.join(menuids,","));
+				sysRoleService.save(role);
+			}
 			return AjaxResult.success();
 		}
 	}
@@ -112,5 +133,81 @@ public class SysRoleController extends BaseController{
 		}
 		return returnlist;
 	}
-	
+
+
+	@GetMapping("/topermissionsave")
+	public ModelAndView toPermissionsave(HttpServletRequest request){
+		ModelAndView mv = new ModelAndView("/syspermission/save");
+		String id = request.getParameter("id");
+		String pid = request.getParameter("pid");
+		SysPermission permission = new SysPermission();
+		if(StrUtil.notBlank(id)){
+			 permission = (SysPermission) CrudUtil.getEntity(SysPermission.class,id);
+		}else{
+			permission.setParentid(pid);
+		}
+		MyReflectUtil.addAnnoData(permission,false);
+		mv.addObject("entity", permission);
+		return mv;
+	}
+
+	@GetMapping("/LoadPermissionTree")
+	@ResponseBody
+	public List<Map<String,Object>> LoadPermissionTree(HttpServletRequest request){
+		String check = request.getParameter("check");
+		List<SysRole> roles = SysUserUtil.getUserRoles();
+		Set<Integer> menuids = new HashSet<>();
+		Set<Integer> perids = new HashSet();
+		for(SysRole role : roles){
+			if(StrUtil.notBlank(role.getMenuIds())){
+				String []ids = role.getMenuIds().split(",");
+				for(String id : ids){
+					menuids.add(Integer.parseInt(id));
+				}
+			}
+			if(StrUtil.notBlank(role.getActionIds())){
+				String []ids = role.getActionIds().split(",");
+				for(String id : ids){
+					perids.add(Integer.parseInt(id));
+				}
+			}
+		}
+		List<SysMenu> menus = sysMenuService.findAll();
+		List<SysPermission> permissions = sysRoleService.findAllPermission();
+		List<Map<String,Object>> returnlist = new ArrayList<>();
+		for(SysMenu menu : menus){
+			Map<String,Object> treemap = new HashMap<String,Object>();
+			treemap.put("id", "m_"+menu.getId());
+			treemap.put("name", menu.getName());
+			if(menuids.contains(menu.getId())){
+				treemap.put("checked", true);
+			}
+			if(menu.getIsshow()==Eum.SysMenu.isshow.MORENZHANSHI){
+				treemap.put("checked", true);
+				treemap.put("chkDisabled", true);
+			}
+			returnlist.add(treemap);
+		}
+		for(SysPermission permission : permissions){
+			Map<String,Object> treemap1 = new HashMap<String,Object>();
+			treemap1.put("id", permission.getId());
+			if("1".equals(check)){
+				treemap1.put("name", permission.getName());
+			}else{
+				treemap1.put("name", permission.getName()+"("+permission.getPermission()+")");
+			}
+			treemap1.put("pid", permission.getParentid());
+			if(perids.contains(permission.getId())){
+				treemap1.put("checked", true);
+			}
+			if(permission.getType()==Eum.SysMenu.isshow.MORENZHANSHI){
+				treemap1.put("checked", true);
+				treemap1.put("chkDisabled", true);
+			}
+			returnlist.add(treemap1);
+		}
+		return returnlist;
+	}
+
+
 }

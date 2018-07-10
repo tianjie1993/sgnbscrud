@@ -1,10 +1,7 @@
 package com.sgnbs.ms.service.impl;
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -66,8 +63,10 @@ public class SysMenuServiceImpl implements SysMenuService {
 		if(StrUtil.notBlank(menuIds)){
 			String []ids = menuIds.split(",");
  			for(String id : ids){
- 				menulist.add(sysMenuDAO.selectByPrimaryKey(Integer.parseInt(id)));
-			}
+				SysMenu menu = sysMenuDAO.selectByPrimaryKey(Integer.parseInt(id));
+				if(null!=menu){
+					menulist.add(menu);
+				}			}
 		}
 		return menulist;
 	}
@@ -92,10 +91,13 @@ public class SysMenuServiceImpl implements SysMenuService {
 
 	@Override
 	public Set<SysMenu> getMenusByIdsAndIsshow(String menuIds, Integer isshowShow) {
-		Set<SysMenu> menus = new HashSet<SysMenu>();
+		Set<SysMenu> menus = new TreeSet<>(Comparator.comparing(SysMenu::getId));
 		for(String id : menuIds.split(",")) {
 			if(StrUtil.notBlank(id)) {
-				menus.add(sysMenuDAO.selectByPrimaryKey(Integer.parseInt(id)));
+				SysMenu menu = sysMenuDAO.selectByPrimaryKey(Integer.parseInt(id));
+				if(null!=menu){
+					menus.add(menu);
+				}
 			}
 		}
 		menus.addAll(sysMenuDAO.findShowMenu());

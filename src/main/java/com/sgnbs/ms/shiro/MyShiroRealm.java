@@ -3,6 +3,7 @@ package com.sgnbs.ms.shiro;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.sgnbs.ms.model.SysPermission;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -18,7 +19,6 @@ import com.sgnbs.common.constants.Constants;
 import com.sgnbs.common.utils.StrUtil;
 import com.sgnbs.common.utils.SysUserUtil;
 import com.sgnbs.ms.dao.SysUserDAO;
-import com.sgnbs.ms.model.SysAction;
 import com.sgnbs.ms.model.SysUser;
 
 /**
@@ -43,7 +43,7 @@ public class MyShiroRealm extends AuthorizingRealm{
             SimpleAuthorizationInfo info=new SimpleAuthorizationInfo();
             //通过角色获取actionids.然后获取action的permissions
             Set<String> permissons = new HashSet<String>();
-            for(SysAction action : SysUserUtil.getUserActions()) {
+            for(SysPermission action : SysUserUtil.getPermissions()) {
             	if(StrUtil.notBlank(action.getPermission()))
             		permissons.add(action.getPermission());
             }

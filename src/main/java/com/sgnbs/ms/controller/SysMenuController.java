@@ -25,7 +25,6 @@ import com.sgnbs.common.constants.Eum;
 import com.sgnbs.ms.annotation.SysLogAnno;
 import com.sgnbs.ms.model.SysMenu;
 import com.sgnbs.ms.model.SysRole;
-import com.sgnbs.ms.service.intf.SysActionService;
 import com.sgnbs.ms.service.intf.SysMenuService;
 import com.sgnbs.ms.service.intf.SysRoleService;
 
@@ -37,9 +36,7 @@ public class SysMenuController extends BaseController{
 	@Autowired
 	private SysMenuService sysMenuService;
 	
-	@Autowired
-	private SysActionService sysActionService;
-	
+
 	@Autowired
 	private SysRoleService sysRoleService;
 	
@@ -123,7 +120,6 @@ public class SysMenuController extends BaseController{
 		menu = sysMenuService.findById(menu.getId());
 		mv.setViewName(menu.getUrl());
 		mv.addObject("fixedprams", menu.getFixedprams());
-		mv.addObject("actions", sysActionService.findByMenuId(menu.getId()));
 		return mv;
 	}
 }

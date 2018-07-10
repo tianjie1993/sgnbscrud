@@ -25,4 +25,7 @@ public interface ListDAO {
 
 	List<Map<String,String>> findSysLogList(Map<String,String> map);
 
+	List<Map<String,String>> findSysPermissionList(Map<String,String> map);
+
+
 }

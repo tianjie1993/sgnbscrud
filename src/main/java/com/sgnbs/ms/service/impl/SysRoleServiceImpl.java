@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sgnbs.ms.dao.SysPermissionDAO;
+import com.sgnbs.ms.model.SysPermission;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,9 @@ public class SysRoleServiceImpl implements SysRoleService {
 
 	@Autowired
 	private SysMenuDAO sysMenuDAO;
+
+	@Autowired
+	private SysPermissionDAO sysPermissionDAO;
 
 	@Override
 	public SysRole save(SysRole entity) {
@@ -131,6 +136,11 @@ public class SysRoleServiceImpl implements SysRoleService {
 	public void deleteByIds(String ids) {
 		List<String> idlist = Arrays.asList(ids.split(","));
 		sysRoleDAO.deleteByIds(idlist);
+	}
+
+	@Override
+	public List<SysPermission> findAllPermission() {
+		return sysPermissionDAO.findAll();
 	}
 
 

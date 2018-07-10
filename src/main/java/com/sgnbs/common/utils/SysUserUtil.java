@@ -2,17 +2,13 @@ package com.sgnbs.common.utils;
 
 import java.util.*;
 
+import com.sgnbs.ms.dao.SysPermissionDAO;
+import com.sgnbs.ms.model.*;
 import org.apache.shiro.SecurityUtils;
 
-import com.sgnbs.common.constants.Constants;
 import com.sgnbs.common.constants.Eum;
-import com.sgnbs.ms.dao.SysActionDAO;
 import com.sgnbs.ms.dao.SysMenuDAO;
 import com.sgnbs.ms.dao.SysRoleDAO;
-import com.sgnbs.ms.model.SysAction;
-import com.sgnbs.ms.model.SysMenu;
-import com.sgnbs.ms.model.SysRole;
-import com.sgnbs.ms.model.SysUser;
 
 public class SysUserUtil {
 	
@@ -20,7 +16,8 @@ public class SysUserUtil {
 	
 	private static SysMenuDAO  sysMenuDAO = SpringUtil.getBean(SysMenuDAO.class);
 
-	private static SysActionDAO  sysActionDAO = SpringUtil.getBean(SysActionDAO.class);
+	private static SysPermissionDAO sysPermissionDAO = SpringUtil.getBean(SysPermissionDAO.class);
+
 
 	public static SysUser getUser() {
 		SysUser user = (SysUser) SecurityUtils.getSubject().getPrincipal();
@@ -56,25 +53,27 @@ public class SysUserUtil {
 		return list;
 	}
 	
-	public static List<SysAction> getUserActions(){
-		Set<SysAction> set = new HashSet<SysAction>();
-		List<SysAction> list = new ArrayList<SysAction>();
+
+	public static Set<SysPermission> getPermissions(){
+		Set<SysPermission> set = new TreeSet<>(Comparator.comparing(SysPermission::getId));
 		List<SysRole> rolelist = getUserRoles();
-		SysAction temp = new SysAction();
-		temp.setIsshow(Eum.SysMenu.isshow.MORENZHANSHI);
-		set.addAll(sysActionDAO.findList(temp));
+		List<SysPermission> permissions = sysPermissionDAO.findAll();
+		for(SysPermission permission : permissions){
+			if(1==permission.getType()){
+				set.add(permission);
+			}
+		}
 		for(SysRole role : rolelist) {
 			if(StrUtil.notBlank(role.getActionIds())) {
 				String []ids = role.getActionIds().split(",");
 				for(String id : ids) {
-					SysAction action = sysActionDAO.selectByPrimaryKey(Integer.parseInt(id));
-					if(null!=action) {
-						set.add(sysActionDAO.selectByPrimaryKey(Integer.parseInt(id)));
+					SysPermission permission = sysPermissionDAO.selectByPrimaryKey(Integer.parseInt(id));
+					if(null!=permission) {
+						set.add(permission);
 					}
 				}
 			}
 		}
-		list.addAll(set);
-		return list;
+		return set;
 	}
 }

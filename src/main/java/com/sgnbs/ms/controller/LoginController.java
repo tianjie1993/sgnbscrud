@@ -45,8 +45,8 @@ public class LoginController extends BaseController {
 	@GetMapping("/toIndex")
 	public ModelAndView toIndex(HttpSession session) {
 		ModelAndView mv = new ModelAndView("/index");
-		List<SysMenu> usermenulist = new ArrayList<SysMenu>();
-		Map<Integer, SysMenu> menumap = new TreeMap<Integer, SysMenu>();
+		List<SysMenu> usermenulist = new ArrayList<>();
+		Map<Integer, SysMenu> menumap = new TreeMap<>();
 		usermenulist = SysUserUtil.getUserMenus();
 		for (SysMenu menu : usermenulist) {
 			if (1==menu.getParentid()) {

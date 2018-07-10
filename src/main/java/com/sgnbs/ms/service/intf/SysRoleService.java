@@ -4,6 +4,7 @@ package com.sgnbs.ms.service.intf;
 import java.util.List;
 
 import com.github.pagehelper.Page;
+import com.sgnbs.ms.model.SysPermission;
 import com.sgnbs.ms.model.SysRole;
 
 
@@ -24,4 +25,5 @@ public interface SysRoleService {
 	void deleteByIds(String ids);
 
 
+    List<SysPermission> findAllPermission();
 }
