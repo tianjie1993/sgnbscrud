@@ -2,6 +2,8 @@ package com.sgnbs.ms.controller;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,15 +49,7 @@ public class SysRoleController extends BaseController{
 	private SysMenuService sysMenuService;
 
 
-	@GetMapping("/toallotmenu")
-	@RequiresPermissions("role:allotmenu")
-	public ModelAndView toallotMenu(HttpServletRequest request){
-		ModelAndView mv = new ModelAndView("/sysrole/allotmenu");
-		String id = request.getParameter("id");
-		mv.addObject("roleid", id);
-		return mv;
-	}
-	
+
 	@GetMapping("/toallotper")
 	@RequiresPermissions("role:allotper")
 	public ModelAndView toallotBtn(HttpServletRequest request){
@@ -63,24 +57,6 @@ public class SysRoleController extends BaseController{
 		String id = request.getParameter("id");
 		mv.addObject("roleid", id);
 		return mv;
-	}
-	
-	
-	
-	@PostMapping("/allotmenu")
-	@ResponseBody
-	@SysLogAnno("角色分配菜单")
-	public AjaxResult allotmenu(HttpServletRequest request){
-		String ids = request.getParameter("menuids");
-		String roleid = request.getParameter("roleid");
-		SysRole role = sysRoleService.findById(roleid);
-		if(role==null){
-			return AjaxResult.error("用户不存在！");
-		}else{
-			role.setMenuIds(ids);
-			sysRoleService.save(role);
-			return AjaxResult.success();
-		}
 	}
 	
 
@@ -112,7 +88,7 @@ public class SysRoleController extends BaseController{
 			return AjaxResult.success();
 		}
 	}
-	
+
 	@GetMapping("/LoadTree")
 	@ResponseBody
 	public List<Map<String,Object>> loadTree(HttpServletRequest request){
@@ -176,7 +152,7 @@ public class SysRoleController extends BaseController{
 		List<SysPermission> permissions = sysRoleService.findAllPermission();
 		List<Map<String,Object>> returnlist = new ArrayList<>();
 		for(SysMenu menu : menus){
-			Map<String,Object> treemap = new HashMap<String,Object>();
+			Map<String,Object> treemap = new HashMap<>();
 			treemap.put("id", "m_"+menu.getId());
 			treemap.put("name", menu.getName());
 			treemap.put("pid", "m_"+menu.getParentid());
@@ -191,7 +167,7 @@ public class SysRoleController extends BaseController{
 			returnlist.add(treemap);
 		}
 		for(SysPermission permission : permissions){
-			Map<String,Object> treemap1 = new HashMap<String,Object>();
+			Map<String,Object> treemap1 = new HashMap<>();
 			treemap1.put("id", permission.getId());
 			if("1".equals(check)){
 				treemap1.put("name", permission.getName());
